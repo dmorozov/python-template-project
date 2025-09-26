@@ -26,7 +26,7 @@ hello = "hello_world.main:main"
 
 [tool.ruff]
 target-version = "py39"
-line-length = 88
+line-length = 120
 select = [
     "E",  # pycodestyle errors
     "W",  # pycodestyle warnings

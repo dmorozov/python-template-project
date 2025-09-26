@@ -139,7 +139,7 @@ The project includes VSCode configuration for optimal development experience:
 
 ### Code Formatting & Linting
 - **Ruff**: Fast Python linter and code formatter (replaces Black, isort, Flake8)
-  - Line length 88
+  - Line length 120
   - Comprehensive rule set including pycodestyle, pyflakes, pyupgrade, etc.
   - Auto-fixes many issues
 - **MyPy**: Static type checking with strict mode
