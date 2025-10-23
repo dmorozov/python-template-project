@@ -34,18 +34,8 @@ hello-world-project/
 
 ## Setup and Installation
 
-poetry env activate
-
-Note: if .venv folder will not be created, then do:
-poetry env list
-poetry env remove existing_env
-poetry config --local virtualenvs.in-project true
-poetry env activate
-source .env/bin/activate
-
 ### Prerequisites
 
-- Python 3.9 or higher
 - Poetry (install from https://python-poetry.org/docs/#installation)
 
 ### Installation Steps
@@ -57,27 +47,38 @@ source .env/bin/activate
    ```
 
 2. **Install Poetry** (if not already installed)
+
    ```bash
    curl -sSL https://install.python-poetry.org | python3 -
    ```
 
-3. **Create the project files** (copy all the provided files into their respective locations)
+3. **Install dependencies and create virtual environment**
 
-4. **Install dependencies and create virtual environment**
-   ```bash
-   poetry install
-   ```
+```bash
+poetry install
+```
 
-5. **Activate the virtual environment**
-   ```bash
-   poetry env activate
-   ```
+Note: If .venv folder doesn't exists after install, then do:
 
-6. **Install pre-commit hooks**
-   ```bash
-   poetry add --group dev pre-commit
-   poetry run pre-commit install
-   ```
+```bash
+poetry env list
+poetry env remove existing_env
+poetry config --local virtualenvs.in-project true
+```
+
+4. **Activate the virtual environment**
+
+```bash
+poetry env activate
+source .venv/bin/activate
+```
+
+5. **Install pre-commit hooks**
+
+```bash
+poetry add --group dev pre-commit
+poetry run pre-commit install
+```
 
 ## Usage
 
@@ -157,27 +158,32 @@ The project includes VSCode configuration for optimal development experience:
 - **pytest**: Test discovery and execution
 - **Coverage**: Minimum 80% coverage required
 
-### Convert GGUF model to ONNX genai
+### Convert Hugging Face AI models to ONNX genai model
 
-source .env/bin/activate
-pip install onnxruntime-genai onnx_ir torch tqdm transformers tensorflow huggingface_hub
+The convertion tool onnxruntime_genai require login to the Hugging Face.
+Generate token added at https://huggingface.co/settings/tokens.
 
+```bash
 huggingface-cli login
-and provide token added at https://huggingface.co/settings/tokens
+```
 
-python -m onnxruntime_genai.models.builder -m google/gemma-2b-it -e cpu -p int4 -o ./converted/gemma2b-int4-cp
+Convert Hugging Face AI model:
 
-or from local GGUF file:
+```bash
+python -m onnxruntime_genai.models.builder -m Exquisique/Llama-3.2-1B_Chat_Alpaca -o ./converted/Llama-3.2-1B_Chat_Alpaca-ONNX -p int4 -e cpu
+```
+
+Or from local GGUF file:
+
+```bash
 curl -L -O https://huggingface.co/mukel/Llama-3.2-3B-Instruct-GGUF/resolve/main/Llama-3.2-3B-Instruct-Q4_0.gguf
+
 python -m onnxruntime_genai.models.builder -m mukel/Llama-3.2-3B-Instruct -i lama-3.2-3B-Instruct-Q4_0.gguf -o ./converted/lama-3.2-3B-Instruct-Q4_0 -p int4 -e cpu
+```
 
 Documentation: https://github.com/microsoft/onnxruntime-genai/blob/main/src/python/py/models/README.md
 
-python -m onnxruntime_genai.models.builder -m unsloth/Llama-3.2-3B-Instruct -o ./converted/lama-3.2-3B-Instruct-Q4_0 -p int4 -e cpu
-
-python -m onnxruntime_genai.models.builder -m emredeveloper/DeepSeek-R1-Distill-Qwen-1.5B-4bit -o ./converted/DeepSeek-R1-Distill-Qwen-1.5B-ONNX -p int4 -e cpu
-
-Note: the model "at Haggingspaces must have config.json
+Note: the model at Hugging Face must have config.json
 Working models:
 - Exquisique/Llama-3.2-1B_Chat_Alpaca
 - mukel/Llama-3.2-3B-Instruct-GGUF
@@ -186,14 +192,6 @@ Working models:
 - saishshinde15/Summmary_Model_Llama-3.2-1B-Instruct - bad!!!, small context
 - ?
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests and quality checks
-5. Submit a pull request
-
 ## License
 
-This project is open source and available under the MIT License.
+This project is open source and available under the Apache 2.0 License.
