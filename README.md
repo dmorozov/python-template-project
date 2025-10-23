@@ -58,6 +58,8 @@ hello-world-project/
 poetry install
 ```
 
+Important!!! The project has configured onnxruntime-genai dependencies to use ONNX model convertor. It is a LOT of dependencies to download.
+
 Note: If .venv folder doesn't exists after install, then do:
 
 ```bash
