@@ -34,6 +34,15 @@ hello-world-project/
 
 ## Setup and Installation
 
+poetry env activate
+
+Note: if .venv folder will not be created, then do:
+poetry env list
+poetry env remove existing_env
+poetry config --local virtualenvs.in-project true
+poetry env activate
+source .env/bin/activate
+
 ### Prerequisites
 
 - Python 3.9 or higher
@@ -147,6 +156,35 @@ The project includes VSCode configuration for optimal development experience:
 ### Testing
 - **pytest**: Test discovery and execution
 - **Coverage**: Minimum 80% coverage required
+
+### Convert GGUF model to ONNX genai
+
+source .env/bin/activate
+pip install onnxruntime-genai onnx_ir torch tqdm transformers tensorflow huggingface_hub
+
+huggingface-cli login
+and provide token added at https://huggingface.co/settings/tokens
+
+python -m onnxruntime_genai.models.builder -m google/gemma-2b-it -e cpu -p int4 -o ./converted/gemma2b-int4-cp
+
+or from local GGUF file:
+curl -L -O https://huggingface.co/mukel/Llama-3.2-3B-Instruct-GGUF/resolve/main/Llama-3.2-3B-Instruct-Q4_0.gguf
+python -m onnxruntime_genai.models.builder -m mukel/Llama-3.2-3B-Instruct -i lama-3.2-3B-Instruct-Q4_0.gguf -o ./converted/lama-3.2-3B-Instruct-Q4_0 -p int4 -e cpu
+
+Documentation: https://github.com/microsoft/onnxruntime-genai/blob/main/src/python/py/models/README.md
+
+python -m onnxruntime_genai.models.builder -m unsloth/Llama-3.2-3B-Instruct -o ./converted/lama-3.2-3B-Instruct-Q4_0 -p int4 -e cpu
+
+python -m onnxruntime_genai.models.builder -m emredeveloper/DeepSeek-R1-Distill-Qwen-1.5B-4bit -o ./converted/DeepSeek-R1-Distill-Qwen-1.5B-ONNX -p int4 -e cpu
+
+Note: the model "at Haggingspaces must have config.json
+Working models:
+- Exquisique/Llama-3.2-1B_Chat_Alpaca
+- mukel/Llama-3.2-3B-Instruct-GGUF
+- voodyara/Llama-3.2-1B-Summarization-QLoRA
+- alpindale/Llama-3.2-1B
+- saishshinde15/Summmary_Model_Llama-3.2-1B-Instruct - bad!!!, small context
+- ?
 
 ## Contributing
 
